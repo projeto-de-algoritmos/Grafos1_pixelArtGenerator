@@ -7,7 +7,7 @@
 |Matrícula | Aluno |
 | -- | -- |
 | 18/0121995  |  Herick de Carvalho Lima |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
+| 19/0054832  |  Arthur Talles de Sousa Cunha |
 
 ## Sobre 
 Descreva os objetivos do seu projeto e como ele funciona. 
