@@ -37,24 +37,27 @@ pygame.display.set_caption("PixelArt")
 
 vertices = []
 
-
 def escolhe_cor(cor):
-  peso_cor = 50
+  peso_cor = 1
   nova_cor = list(cor)
   limite = 256
 
+  parte = max(nova_cor)
+
   if cor[0] > cor[1] and cor[0] > cor[2]: # elemento 0 é o maior da lista
     nova_cor[0] = (cor[0] + peso_cor) % limite
-  if cor[1] > cor[0] and cor[1] > cor[2]: # elemento 1 é o maior da lista 
+  elif cor[1] > cor[0] and cor[1] > cor[2]: # elemento 1 é o maior da lista 
     nova_cor[1] = (cor[1] + peso_cor) % limite
-  if cor[2] > cor[1] and cor[2] > cor[0]: # elemento 2 é o maior da lista 
+  elif cor[2] > cor[1] and cor[2] > cor[0]: # elemento 2 é o maior da lista 
     nova_cor[2] = (cor[2] + peso_cor) % limite
   else:
     i = random.randrange(0, 3)
     nova_cor[i] = (cor[i] + 2) % limite
 
+  # print((parte + peso_cor))
+  # nova_cor[nova_cor.index(parte)] = (parte + peso_cor) % limite
 
-  # print(nova_cor)
+  # print(parte)
 
   return tuple(nova_cor)
 
@@ -64,11 +67,20 @@ for i in range(WIDTH):
     cols.append(Vortex(i, j, BLOCK_SIZE, BLOCK_SIZE, display))
   vertices.append(cols)
 
+
+cor_anterior = (55,0,100)
+
+
 def draw_field(w, h):
+  global cor_anterior
   for i in range(0, w, BLOCK_SIZE):
     for j in range(0, h, BLOCK_SIZE):
-      # if i != 0 and j != 0:
-      vertices[i][j].vortex(display, color=(i % 255, j % 255, ((i + j) % 255)))
+      cor = escolhe_cor(cor_anterior)
+      print(cor)
+      cor_anterior = cor
+      vertices[i][j].vortex(display, color=cor)
+    # sys.exit()
+
 
 
 while True:
