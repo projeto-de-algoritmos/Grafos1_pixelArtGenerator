@@ -16,6 +16,7 @@ class Vortex:
     self.height = height
     self.display = display
     self.neighbours = []
+    self.is_vortex = True
 
   def vortex(self, display, color=None):
     if color is None:
@@ -24,54 +25,73 @@ class Vortex:
       self.color = color
     pygame.draw.rect(display, color, (self.x, self.y, self.width, self.height))
 
-  def discover_neightbours(self):
+  def is_wall(self):
     w = self.display.get_width()
     h = self.display.get_height()
 
+    if self.x == 0 or self.x == w - 1 or self.y == 0 or self.y == h - 1:
+      self.is_vortex = False
+      self.color = BLACK
+      self.neighbours = []
+
+  def discover_neightbours(self, field):
+    w = self.display.get_width()
+    h = self.display.get_height()
+
+    # self.is_wall()
+
     if (self.x > 0 and self.x < w -1) and (self.y > 0 and self.y < h - 1):
-      self.neighbours.append((self.x + 1, self.y)) # vizinho da direita
-      self.neighbours.append((self.x - 1, self.y)) # vizinho da esquerda
-      self.neighbours.append((self.x, self.y + 1)) # vizinho de baixo
-      self.neighbours.append((self.x, self.y - 1)) # vizinho de cima
-    else:
-      if self.x == 0:
-        if self.y > 0 and self.y < h - 1:
-          self.neighbours.append((self.x, self.y + 1)) # vizinho de baixo
-          self.neighbours.append((self.x, self.y - 1)) # vizinho de cima
-          self.neighbours.append((self.x + 1, self.y)) # vizinho da direita
-      if self.x == w - 1:
-        if self.y > 0 and self.y < h - 1:
-          self.neighbours.append((self.x, self.y + 1)) # vizinho de baixo
-          self.neighbours.append((self.x, self.y - 1)) # vizinho de cima
-          self.neighbours.append((self.x - 1, self.y)) # vizinho da esquerda
-      if self.y == 0:
-        if self.x > 0 and self.x < w - 1:
-          self.neighbours.append((self.x, self.y + 1)) # vizinho de baixo
-          self.neighbours.append((self.x - 1, self.y)) # vizinho da esquerda
-          self.neighbours.append((self.x + 1, self.y)) # vizinho da direita
-      if self.y == h - 1:
-        if self.x > 0 and self.x < w - 1:
-          self.neighbours.append((self.x - 1, self.y)) # vizinho da esquerda
-          self.neighbours.append((self.x + 1, self.y)) # vizinho da direita
-          self.neighbours.append((self.x, self.y - 1)) # vizinho de cima
+      if field[self.x + 1][self.y].is_vortex:
+        self.neighbours.append(field[self.x + 1][self.y]) # vizinho da direita
+        # print(1, field[self.x + 1][self.y].is_vortex, self.x + 1, self.y)
+      if field[self.x - 1][self.y].is_vortex:
+        self.neighbours.append(field[self.x - 1][self.y]) # vizinho da esquerda
+        # print(2, field[self.x - 1][self.y].is_vortex, self.x - 1, self.y)
+      if field[self.x][self.y + 1].is_vortex:
+        self.neighbours.append(field[self.x][self.y + 1]) # vizinho de baixo
+        # print(3, field[self.x][self.y + 1].is_vortex, self.x, self.y + 1)
+      if field[self.x][self.y - 1].is_vortex:
+        self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
+        # print(4, field[self.x][self.y - 1].is_vortex, self.x, self.y - 1)
+    # else:
+    #   if self.x == 0:
+    #     if self.y > 0 and self.y < h - 1:
+    #       self.neighbours.append(field[self.x][self.y + 1]) # vizinho de baixo
+    #       self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
+    #       self.neighbours.append(field[self.x + 1][self.y]) # vizinho da direita
+    #   if self.x == w - 1:
+    #     if self.y > 0 and self.y < h - 1:
+    #       self.neighbours.append(field[self.x][self.y + 1]) # vizinho de baixo
+    #       self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
+    #       self.neighbours.append(field[self.x - 1][self.y]) # vizinho da esquerda
+    #   if self.y == 0:
+    #     if self.x > 0 and self.x < w - 1:
+    #       self.neighbours.append(field[self.x][self.y + 1]) # vizinho de baixo
+    #       self.neighbours.append(field[self.x - 1][self.y]) # vizinho da esquerda
+    #       self.neighbours.append(field[self.x + 1][self.y]) # vizinho da direita
+    #   if self.y == h - 1:
+    #     if self.x > 0 and self.x < w - 1:
+    #       self.neighbours.append(field[self.x - 1][self.y]) # vizinho da esquerda
+    #       self.neighbours.append(field[self.x + 1][self.y]) # vizinho da direita
+    #       self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
 
-      '''CANTOS'''
-      if self.x == 0 and self.y == 0:
-        self.neighbours.append((self.x, self.y + 1)) # vizinho de baixo
-        self.neighbours.append((self.x + 1, self.y)) # vizinho da direita
-      if self.x == w - 1 and self.y == 0:
-        self.neighbours.append((self.x, self.y + 1)) # vizinho de baixo
-        self.neighbours.append((self.x - 1, self.y)) # vizinho da esquerda
-      if self.x == 0 and self.y == h - 1:
-        self.neighbours.append((self.x + 1, self.y)) # vizinho da direita
-        self.neighbours.append((self.x, self.y - 1)) # vizinho de cima
-      if self.x == w - 1 and self.y == h - 1:
-        self.neighbours.append((self.x, self.y - 1)) # vizinho de cima
-        self.neighbours.append((self.x - 1, self.y)) # vizinho da esquerda
+    #   '''CANTOS'''
+    #   if self.x == 0 and self.y == 0:
+    #     self.neighbours.append(field[self.x][self.y + 1]) # vizinho de baixo
+    #     self.neighbours.append(field[self.x + 1][self.y]) # vizinho da direita
+    #   if self.x == w - 1 and self.y == 0:
+    #     self.neighbours.append(field[self.x][self.y + 1]) # vizinho de baixo
+    #     self.neighbours.append(field[self.x - 1][self.y]) # vizinho da esquerda
+    #   if self.x == 0 and self.y == h - 1:
+    #     self.neighbours.append(field[self.x + 1][self.y]) # vizinho da direita
+    #     self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
+    #   if self.x == w - 1 and self.y == h - 1:
+    #     self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
+    #     self.neighbours.append(field[self.x - 1][self.y]) # vizinho da esquerda
 
-WIDTH = 720
-HEIGHT = 480
-BLOCK_SIZE = 1
+WIDTH = 5
+HEIGHT = 5
+BLOCK_SIZE = 10
 FPS = 1
 
 pygame.init()
@@ -104,13 +124,21 @@ for i in range(WIDTH):
   cols = []
   for j in range(HEIGHT):
     cols.append(Vortex(i, j, BLOCK_SIZE, BLOCK_SIZE, display))
-    cols[j].discover_neightbours()
+    cols[j].is_wall()
   vertices.append(cols)
+
+for i in range(WIDTH):
+  for j in range(HEIGHT):
+    # vertices[i][j].is_wall()
+    vertices[i][j].discover_neightbours(vertices)
+    print(("True", vertices[i][j].x, vertices[i][j].y) if vertices[i][j].is_vortex else ("False", vertices[i][j].x, vertices[i][j].y))
+    print("Vizinhos: ", end='')
+    for x in vertices[i][j].neighbours: print(x.x, x.y, " ", end='')
+    print("qtd_vizinhos: ", list(vertices[i][j].neighbours).__len__(),"Coords: ", i, j)
 
 
 cor_anterior = (45,70,100)
 
-print(vertices[0][HEIGHT - 1].neighbours)
 
 def draw_field(w, h):
   global cor_anterior
