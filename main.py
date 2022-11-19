@@ -28,6 +28,7 @@ WIDTH = 720
 HEIGHT = 480
 BLOCK_SIZE = 1
 FPS = 1
+MENU = 1
 
 pygame.init()
 display = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -84,4 +85,46 @@ while True:
       sys.exit()
 
   pygame.display.update()
+
+  def menu(): # Função inicial do menu
+      while True:
+          display.fill((50, 50, 50))
+          text = pygame.font.Font("assets/font.ttf",
+                                  100).render("MENU", True, "#00FF00")
+          rect = text.get_rect(center=(350, 150))
+          text2 = pygame.font.Font(
+              "assets/font.ttf", 22).render("Aperte A para começar!", True, "#ffb500")
+          rect2 = text.get_rect(center=(330, 350))
+          text3 = pygame.font.Font(
+              "assets/font.ttf", 22).render("Aperte O para opções", True, "#ff2a9e")
+          rect3 = text.get_rect(center=(330, 450))
+          text4 = pygame.font.Font(
+              "assets/font.ttf", 22).render("Aperte Q para sair", True, "#33ffb8")
+          rect4 = text.get_rect(center=(330, 550))
+          text5 = pygame.font.Font(
+              "assets/font.ttf", 22).render("Aperte C para controles", True, "#33ff5b")
+          rect5 = text.get_rect(center=(330, 650))
+
+          display.blit(text, rect)
+          display.blit(text2, rect2)
+          display.blit(text3, rect3)
+          display.blit(text4, rect4)
+          display.blit(text5, rect5)
+
+          for event in pygame.event.get():
+              if event.type == pygame.QUIT:
+                  pygame.quit()
+                  sys.exit()
+              '''if event.type == pygame.KEYDOWN:
+                  if event.key == pygame.K_a:
+                      start() #Função a ser implementada
+                  elif event.key == pygame.K_o:
+                      options() #Função a ser implementada
+                  elif event.key == pygame.K_q:
+                      pygame.quit()
+                      sys.exit()
+                  elif event.key == pygame.K_c:
+                      controls() #Função a ser implementada'''
+          pygame.display.update()
+
 
