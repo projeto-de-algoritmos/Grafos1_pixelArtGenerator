@@ -9,8 +9,9 @@ BLACK = (0, 0, 0)
 RED = (204, 20, 20)
 WHITE = (255, 255, 255)
 COR_INICIAL = WHITE
-BLOCK_SIZE = 3  # DEIXAR ENTRE 1 E 5 PARA FICAR MAIS BONITO
+BLOCK_SIZE = 1  # DEIXAR ENTRE 1 E 5 PARA FICAR MAIS BONITO
 FPS = 300       # VELOCIDADE DOS PIXELS
+RANDOM_BFS = False
 vertices = []
 visitados = []
 fila = []
@@ -106,14 +107,17 @@ def draw_field(w, h):
       clock.tick(FPS)
       pygame.display.update() # manter comentado se quiser atualizar a tela toda de uma vez (se tirar o comentario, sera atualizado pixel por pixel)
 
-def bfs(graph, queue, node):  # recebe a lista de vertices
+def bfs(queue, node):  # recebe a lista de vertices
   global cor_anterior
   node.visited = True
   node.vortex(display, color=COR_INICIAL)
   queue.append(node)
   
   while queue:
-    s = queue.pop(0)
+    # s = queue.pop(0)
+    s = random.choice(queue) if RANDOM_BFS else queue.pop(0)
+    queue.pop(queue.index(s)) if RANDOM_BFS else None
+
     # print(s.neighbours)
 
     for n in s.neighbours:
@@ -131,7 +135,7 @@ def bfs(graph, queue, node):  # recebe a lista de vertices
 
 while True:
   # draw_field(WIDTH, HEIGHT)
-  bfs(vertices, fila, vertices[1][1])
+  bfs(fila, vertices[int(WIDTH / 2)][int(HEIGHT / 2)])
   clock.tick(FPS)
 
   for event in pygame.event.get():
