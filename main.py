@@ -127,4 +127,11 @@ while True:
                       controls() #Função a ser implementada'''
           pygame.display.update()
 
+  def main():
+    while True:
+        if scene == MENU:
+            scene = menu()
+  
+  if __name__ == '__main__':
+    menu()
 
