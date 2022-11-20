@@ -3,8 +3,8 @@ import sys
 import random
 
 """CONFIGURAÇÔES"""
-WIDTH = 720                     # tamanho da tela
-HEIGHT = 480
+WIDTH = 2560                     # tamanho da tela
+HEIGHT = 1080
 BLOCK_SIZE = 5                  # tamanho do block
 ROWS = WIDTH // BLOCK_SIZE      # quantidade de linhas
 COLUMNS = HEIGHT // BLOCK_SIZE
@@ -30,7 +30,7 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("PixelArt")
 
 class Vortex:
-  def _init_(self, row, col, width, display) -> None:
+  def __init__(self, row, col, width, display) -> None:
     self.row = row * width
     self.col = col * width
     self.x = row
