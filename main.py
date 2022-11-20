@@ -10,6 +10,7 @@ ROWS = WIDTH // BLOCK_SIZE  # quantidade de linhas
 COLUMNS = HEIGHT // BLOCK_SIZE
 FPS = 30                    # VELOCIDADE DOS PIXELS (nao altera nada)
 RANDOM_BFS = True           # muda o efeito de preenchimento da BFS
+RANDOM_DFS = True
 vertices = []
 
 
@@ -136,7 +137,7 @@ def dfs(node):
       continue
     s.visited = True
     for n in s.neighbours:
-      stack.append(n)
+      stack.append(random.choice(s.neighbours) if RANDOM_DFS else n)
       cor = escolhe_cor(s.color)
       cor_anterior = cor
       n.vortex(display, color=cor)
