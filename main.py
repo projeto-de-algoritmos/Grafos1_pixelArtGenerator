@@ -4,9 +4,11 @@ import random
 import numpy as np
 
 """CONFIGURAÇÔES"""
-WIDTH = 1000                # tamanho da tela
+WIDTH = 2000                # tamanho da tela
+HEIGHT = 1000
 BLOCK_SIZE = 20              # tamanho do block
 ROWS = WIDTH // BLOCK_SIZE  # quantidade de linhas
+COLUMNS = HEIGHT // BLOCK_SIZE
 FPS = 30                    # VELOCIDADE DOS PIXELS (nao altera nada)
 RANDOM_BFS = True           # muda o efeito de preenchimento da BFS
 vertices = []
@@ -20,7 +22,7 @@ WHITE = (255, 255, 255)
 COR_INICIAL = WHITE         
 
 pygame.init()
-display = pygame.display.set_mode((WIDTH, WIDTH))
+display = pygame.display.set_mode((WIDTH, HEIGHT))
 display.fill(BLACK)
 clock = pygame.time.Clock()
 pygame.display.set_caption("PixelArt")
@@ -59,7 +61,7 @@ class Vortex:
       self.neighbours = []
 
   def discover_neighbours(self, field):
-    if (self.x > 0 and self.x < ROWS - 1) and (self.y > 0 and self.y < ROWS - 1):
+    if (self.x > 0 and self.x < ROWS - 1) and (self.y > 0 and self.y < COLUMNS - 1):
       if field[self.x + 1][self.y].is_vortex:
         self.neighbours.append(field[self.x + 1][self.y]) # vizinho da direita
       if field[self.x - 1][self.y].is_vortex:
@@ -143,7 +145,7 @@ while True:
 
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
-      screenshot = pygame.Surface((WIDTH, WIDTH))
+      screenshot = pygame.Surface((WIDTH, HEIGHT))
       screenshot.blit(display, (0, 0))
       pygame.image.save(screenshot, "print.png")
       pygame.quit()
