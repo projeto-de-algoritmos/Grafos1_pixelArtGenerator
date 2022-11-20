@@ -1,11 +1,10 @@
 import pygame
 import sys
 import random
-import numpy as np
 
 """CONFIGURAÇÔES"""
-WIDTH = 2000                # tamanho da tela
-HEIGHT = 1000
+WIDTH = 720                # tamanho da tela
+HEIGHT = 480
 BLOCK_SIZE = 20              # tamanho do block
 ROWS = WIDTH // BLOCK_SIZE  # quantidade de linhas
 COLUMNS = HEIGHT // BLOCK_SIZE
@@ -71,30 +70,20 @@ class Vortex:
       if field[self.x][self.y - 1].is_vortex:
         self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
 
-def gradient(c1):
-  print(np.array(c1) / 255)
-  c2 = cor_anterior
-  n = 2
-
-  mix_pcts = []
-  
-
-gradient(list(BLACK))
-
 def escolhe_cor(cor):
   peso_cor = 25
   nova_cor = list(cor)
   limite = 256
 
-  if cor[0] > cor[1] and cor[0] > cor[2] and random.choice([True, True, True, False, False]): # elemento 0 é o maior da lista
+  if cor[0] > cor[1] and cor[0] > cor[2] and random.choice([True, False]): # elemento 0 é o maior da lista
     nova_cor[0] = (cor[0] + peso_cor) % limite
     nova_cor[1] = (cor[1] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
     nova_cor[2] = (cor[2] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
-  if cor[1] > cor[0] and cor[1] > cor[2] and random.choice([True, True, True, False, False]): # elemento 1 é o maior da lista 
+  if cor[1] > cor[0] and cor[1] > cor[2] and random.choice([True, True, False, False]): # elemento 1 é o maior da lista 
     nova_cor[1] = (cor[0] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
     nova_cor[1] = (cor[1] + peso_cor) % limite
     nova_cor[2] = (cor[2] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
-  if cor[2] > cor[1] and cor[2] > cor[0] and random.choice([True, True, True, False, False]): # elemento 2 é o maior da lista 
+  if cor[2] > cor[1] and cor[2] > cor[0] and random.choice([True, False, False]): # elemento 2 é o maior da lista 
     nova_cor[2] = (cor[0] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
     nova_cor[1] = (cor[1] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
     nova_cor[2] = (cor[2] + peso_cor) % limite
@@ -122,7 +111,7 @@ def bfs(node):
   queue = []
   global cor_anterior
   node.visited = True
-  node.vortex(display, color=(100,255,255))
+  node.vortex(display, color=cor_anterior)
   queue.append(node)
   
   while queue:
@@ -140,7 +129,6 @@ def bfs(node):
 make_grid()
 
 while True:
-  # bfs(vertices[ROWS // 2][COLUMNS // 2])
   clock.tick(FPS)
 
   for event in pygame.event.get():
@@ -154,9 +142,7 @@ while True:
       pos = pygame.mouse.get_pos()
 
       row = (pos[0]) // BLOCK_SIZE
-      col = (pos[1]) // BLOCK_SIZE
-
-      # print(pos, row, col)
+      col = (pos[1]) // BLOCK_SIZE      
 
       bfs(vertices[int(row)][int(col)])
 
