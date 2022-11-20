@@ -4,8 +4,7 @@ import random
 import numpy as np
 
 """CONFIGURAÇÔES"""
-WIDTH = 2000                # tamanho da tela
-HEIGHT = 1000
+WIDTH = 1000                # tamanho da tela
 BLOCK_SIZE = 20              # tamanho do block
 ROWS = WIDTH // BLOCK_SIZE  # quantidade de linhas
 FPS = 30                    # VELOCIDADE DOS PIXELS (nao altera nada)
@@ -21,7 +20,7 @@ WHITE = (255, 255, 255)
 COR_INICIAL = WHITE         
 
 pygame.init()
-display = pygame.display.set_mode((WIDTH, HEIGHT))
+display = pygame.display.set_mode((WIDTH, WIDTH))
 display.fill(BLACK)
 clock = pygame.time.Clock()
 pygame.display.set_caption("PixelArt")
@@ -139,14 +138,25 @@ def bfs(node):
 make_grid()
 
 while True:
-  bfs(vertices[int(ROWS // 3)][int(ROWS // 3)])
+  # bfs(vertices[ROWS // 2][COLUMNS // 2])
   clock.tick(FPS)
 
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
-      screenshot = pygame.Surface((WIDTH, HEIGHT))
+      screenshot = pygame.Surface((WIDTH, WIDTH))
       screenshot.blit(display, (0, 0))
       pygame.image.save(screenshot, "print.png")
       pygame.quit()
       sys.exit()
+    elif event.type == pygame.MOUSEBUTTONDOWN:
+      pos = pygame.mouse.get_pos()
+
+      row = (pos[0]) // BLOCK_SIZE
+      col = (pos[1]) // BLOCK_SIZE
+
+      # print(pos, row, col)
+
+      bfs(vertices[int(row)][int(col)])
+
+
 
