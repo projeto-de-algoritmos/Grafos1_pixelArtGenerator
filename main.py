@@ -125,7 +125,22 @@ def bfs(node):
         cor = escolhe_cor(s.color)
         cor_anterior = cor
         n.vortex(display, color=cor)
-        
+
+def dfs(node):
+  stack = [node]
+
+  while stack:
+    s = stack.pop()
+
+    if s.visited:
+      continue
+    s.visited = True
+    for n in s.neighbours:
+      stack.append(n)
+      cor = escolhe_cor(s.color)
+      cor_anterior = cor
+      n.vortex(display, color=cor)
+              
 make_grid()
 
 while True:
