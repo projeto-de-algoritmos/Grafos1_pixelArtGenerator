@@ -1,24 +1,27 @@
 import pygame
 import sys
 import random
+import numpy as np
 
 """CONFIGURAÇÔES"""
-WIDTH = 1000
-BLOCK_SIZE = 9     # tamanho do block
-ROWS = WIDTH // BLOCK_SIZE
+WIDTH = 2000                # tamanho da tela
+HEIGHT = 1000
+BLOCK_SIZE = 20              # tamanho do block
+ROWS = WIDTH // BLOCK_SIZE  # quantidade de linhas
+FPS = 30                    # VELOCIDADE DOS PIXELS (nao altera nada)
+RANDOM_BFS = True           # muda o efeito de preenchimento da BFS
+vertices = []
+
+
+'''CORES'''
+cor_anterior = (random.randrange(256),random.randrange(256),random.randrange(256))
 BLACK = (0, 0, 0)
 RED = (204, 20, 20)
 WHITE = (255, 255, 255)
-COR_INICIAL = WHITE
-FPS = 30000     # VELOCIDADE DOS PIXELS
-RANDOM_BFS = True
-vertices = []
-visitados = []
-fila = []
-cor_anterior = (random.randrange(256),random.randrange(256),random.randrange(256))
+COR_INICIAL = WHITE         
 
 pygame.init()
-display = pygame.display.set_mode((WIDTH, WIDTH))
+display = pygame.display.set_mode((WIDTH, HEIGHT))
 display.fill(BLACK)
 clock = pygame.time.Clock()
 pygame.display.set_caption("PixelArt")
@@ -67,16 +70,32 @@ class Vortex:
       if field[self.x][self.y - 1].is_vortex:
         self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
 
+def gradient(c1):
+  print(np.array(c1) / 255)
+  c2 = cor_anterior
+  n = 2
+
+  mix_pcts = []
+  
+
+gradient(list(BLACK))
+
 def escolhe_cor(cor):
-  peso_cor = 1
+  peso_cor = 25
   nova_cor = list(cor)
   limite = 256
 
-  if cor[0] > cor[1] and cor[0] > cor[2]: # elemento 0 é o maior da lista
+  if cor[0] > cor[1] and cor[0] > cor[2] and random.choice([True, True, True, False, False]): # elemento 0 é o maior da lista
     nova_cor[0] = (cor[0] + peso_cor) % limite
-  if cor[1] > cor[0] and cor[1] > cor[2]: # elemento 1 é o maior da lista 
+    nova_cor[1] = (cor[1] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
+    nova_cor[2] = (cor[2] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
+  if cor[1] > cor[0] and cor[1] > cor[2] and random.choice([True, True, True, False, False]): # elemento 1 é o maior da lista 
+    nova_cor[1] = (cor[0] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
     nova_cor[1] = (cor[1] + peso_cor) % limite
-  if cor[2] > cor[1] and cor[2] > cor[0]: # elemento 2 é o maior da lista 
+    nova_cor[2] = (cor[2] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
+  if cor[2] > cor[1] and cor[2] > cor[0] and random.choice([True, True, True, False, False]): # elemento 2 é o maior da lista 
+    nova_cor[2] = (cor[0] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
+    nova_cor[1] = (cor[1] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
     nova_cor[2] = (cor[2] + peso_cor) % limite
   else:
     i = random.randrange(0, 3)
@@ -84,21 +103,25 @@ def escolhe_cor(cor):
 
   return tuple(nova_cor)
 
-for i in range(ROWS):
-  cols = []
-  for j in range(ROWS):
-    cols.append(Vortex(i, j, WIDTH // ROWS, display))
-  vertices.append(cols)
+def make_grid():
 
-for i in range(ROWS):
-  for j in range(ROWS):
-    vertices[i][j].discover_neighbours(vertices)
+  for i in range(ROWS):
+    cols = []
+    for j in range(ROWS):
+      cols.append(Vortex(i, j, WIDTH // ROWS, display))
+    vertices.append(cols)
 
+  for i in range(ROWS):
+    for j in range(ROWS):
+      vertices[i][j].discover_neighbours(vertices)
 
-def bfs(queue, node):
+COR_DEFINIDA = (88, 0, 255)
+
+def bfs(node):
+  queue = []
   global cor_anterior
   node.visited = True
-  node.vortex(display, color=COR_INICIAL)
+  node.vortex(display, color=(100,255,255))
   queue.append(node)
   
   while queue:
@@ -109,18 +132,19 @@ def bfs(queue, node):
       if not n.visited:
         n.visited = True
         queue.append(n)
-        cor = escolhe_cor(cor_anterior)
+        cor = escolhe_cor(s.color)
         cor_anterior = cor
         n.vortex(display, color=cor)
         
+make_grid()
 
 while True:
-  bfs(fila, vertices[int(ROWS // 2)][int(ROWS // 2)])
+  bfs(vertices[int(ROWS // 3)][int(ROWS // 3)])
   clock.tick(FPS)
 
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
-      screenshot = pygame.Surface((WIDTH, WIDTH))
+      screenshot = pygame.Surface((WIDTH, HEIGHT))
       screenshot.blit(display, (0, 0))
       pygame.image.save(screenshot, "print.png")
       pygame.quit()
