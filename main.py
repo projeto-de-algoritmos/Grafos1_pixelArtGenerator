@@ -70,6 +70,14 @@ class Vortex:
         self.neighbours.append(field[self.x][self.y + 1]) # vizinho de baixo
       if field[self.x][self.y - 1].is_vortex:
         self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
+      if field[self.x - 1][self.y - 1].is_vortex:
+        self.neighbours.append(field[self.x - 1][self.y - 1]) # superior esquerdo
+      if field[self.x - 1][self.y + 1].is_vortex:
+        self.neighbours.append(field[self.x - 1][self.y + 1]) # superior direito
+      if field[self.x + 1][self.y + 1].is_vortex:
+        self.neighbours.append(field[self.x + 1][self.y + 1]) # inferior direito
+      if field[self.x + 1][self.y - 1].is_vortex:
+        self.neighbours.append(field[self.x + 1][self.y - 1]) # inferior esquerdo
 
 def escolhe_cor(cor):
   peso_cor = 25
