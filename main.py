@@ -3,23 +3,25 @@ import sys
 import random
 
 """CONFIGURAÇÔES"""
-WIDTH = 720                # tamanho da tela
+WIDTH = 720                     # tamanho da tela
 HEIGHT = 480
-BLOCK_SIZE = 20              # tamanho do block
-ROWS = WIDTH // BLOCK_SIZE  # quantidade de linhas
+BLOCK_SIZE = 5                  # tamanho do block
+ROWS = WIDTH // BLOCK_SIZE      # quantidade de linhas
 COLUMNS = HEIGHT // BLOCK_SIZE
-FPS = 30                    # VELOCIDADE DOS PIXELS (nao altera nada)
-RANDOM_BFS = True           # muda o efeito de preenchimento da BFS
+FPS = 30                        # VELOCIDADE DOS PIXELS (nao altera nada)
+RANDOM_BFS = False              # muda o efeito de preenchimento da BFS
 RANDOM_DFS = True
 vertices = []
 
 
 '''CORES'''
 cor_anterior = (random.randrange(256),random.randrange(256),random.randrange(256))
+# cor_random = (random.randrange(256),random.randrange(256),random.randrange(256))
 BLACK = (0, 0, 0)
 RED = (204, 20, 20)
 WHITE = (255, 255, 255)
-COR_INICIAL = WHITE         
+COR_INICIAL = WHITE    
+TAXA_COR = 50           # muda a frequencia com que cada cor é alterada, quanto maior, mais cores aparecerao (melhor efeito entre 16 e 100)
 
 pygame.init()
 display = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -28,7 +30,7 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("PixelArt")
 
 class Vortex:
-  def __init__(self, row, col, width, display) -> None:
+  def _init_(self, row, col, width, display) -> None:
     self.row = row * width
     self.col = col * width
     self.x = row
@@ -63,37 +65,42 @@ class Vortex:
   def discover_neighbours(self, field):
     if (self.x > 0 and self.x < ROWS - 1) and (self.y > 0 and self.y < COLUMNS - 1):
       if field[self.x + 1][self.y].is_vortex:
-        self.neighbours.append(field[self.x + 1][self.y]) # vizinho da direita
+        self.neighbours.append(field[self.x + 1][self.y])     # vizinho da direita
       if field[self.x - 1][self.y].is_vortex:
-        self.neighbours.append(field[self.x - 1][self.y]) # vizinho da esquerda
+        self.neighbours.append(field[self.x - 1][self.y])     # vizinho da esquerda
       if field[self.x][self.y + 1].is_vortex:
-        self.neighbours.append(field[self.x][self.y + 1]) # vizinho de baixo
+        self.neighbours.append(field[self.x][self.y + 1])     # vizinho de baixo
       if field[self.x][self.y - 1].is_vortex:
-        self.neighbours.append(field[self.x][self.y - 1]) # vizinho de cima
+        self.neighbours.append(field[self.x][self.y - 1])     # vizinho de cima
       if field[self.x - 1][self.y - 1].is_vortex:
         self.neighbours.append(field[self.x - 1][self.y - 1]) # superior esquerdo
-
+      if field[self.x - 1][self.y + 1].is_vortex:
+        self.neighbours.append(field[self.x - 1][self.y + 1]) # superior direito
+      if field[self.x + 1][self.y + 1].is_vortex:
+        self.neighbours.append(field[self.x + 1][self.y + 1]) # inferior direito
+      if field[self.x + 1][self.y - 1].is_vortex:
+        self.neighbours.append(field[self.x + 1][self.y - 1]) # inferior esquerdo
+    
 
 def escolhe_cor(cor):
-  peso_cor = 25
   nova_cor = list(cor)
   limite = 256
 
   if cor[0] > cor[1] and cor[0] > cor[2] and random.choice([True, False]): # elemento 0 é o maior da lista
-    nova_cor[0] = (cor[0] + peso_cor) % limite
-    nova_cor[1] = (cor[1] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
-    nova_cor[2] = (cor[2] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
-  if cor[1] > cor[0] and cor[1] > cor[2] and random.choice([True, True, False, False]): # elemento 1 é o maior da lista 
-    nova_cor[1] = (cor[0] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
-    nova_cor[1] = (cor[1] + peso_cor) % limite
-    nova_cor[2] = (cor[2] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
-  if cor[2] > cor[1] and cor[2] > cor[0] and random.choice([True, False, False]): # elemento 2 é o maior da lista 
-    nova_cor[2] = (cor[0] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
-    nova_cor[1] = (cor[1] + random.randrange(0, 5) if peso_cor > 15 else 0) % limite
-    nova_cor[2] = (cor[2] + peso_cor) % limite
+    nova_cor[0] = (cor[0] + TAXA_COR) % limite
+    nova_cor[1] = (cor[1] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+    nova_cor[2] = (cor[2] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+  if cor[1] > cor[0] and cor[1] > cor[2] and random.choice([True, False]): # elemento 1 é o maior da lista 
+    nova_cor[1] = (cor[0] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+    nova_cor[1] = (cor[1] + TAXA_COR) % limite
+    nova_cor[2] = (cor[2] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+  if cor[2] > cor[1] and cor[2] > cor[0] and random.choice([True, False]): # elemento 2 é o maior da lista 
+    nova_cor[2] = (cor[0] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+    nova_cor[1] = (cor[1] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+    nova_cor[2] = (cor[2] + TAXA_COR) % limite
   else:
     i = random.randrange(0, 3)
-    nova_cor[i] = (cor[i] + peso_cor) % limite
+    nova_cor[i] = (cor[i] + TAXA_COR) % limite
 
   return tuple(nova_cor)
 
@@ -115,7 +122,7 @@ def bfs(node):
   queue = []
   global cor_anterior
   node.visited = True
-  node.vortex(display, color=cor_anterior)
+  node.vortex(display, color=RED)
   queue.append(node)
   
   while queue:
@@ -144,7 +151,7 @@ def dfs(node):
       cor = escolhe_cor(s.color)
       cor_anterior = cor
       n.vortex(display, color=cor)
-              
+
 make_grid()
 
 while True:
@@ -163,7 +170,7 @@ while True:
       row = (pos[0]) // BLOCK_SIZE
       col = (pos[1]) // BLOCK_SIZE      
 
-      bfs(vertices[int(row)][int(col)])
-
+      dfs(vertices[int(row)][int(col)])
+      # bfs(vertices[int(row)][int(col)])
 
 
