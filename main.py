@@ -2,34 +2,35 @@ import pygame
 import sys
 import random
 
-"""CONSTANTES"""
-WIDTH = 720
-HEIGHT = 480
+"""CONFIGURAÇÔES"""
+WIDTH = 1000
+BLOCK_SIZE = 9     # tamanho do block
+ROWS = WIDTH // BLOCK_SIZE
 BLACK = (0, 0, 0)
 RED = (204, 20, 20)
 WHITE = (255, 255, 255)
 COR_INICIAL = WHITE
-BLOCK_SIZE = 1  # DEIXAR ENTRE 1 E 5 PARA FICAR MAIS BONITO
-FPS = 300       # VELOCIDADE DOS PIXELS
-RANDOM_BFS = False
+FPS = 30000     # VELOCIDADE DOS PIXELS
+RANDOM_BFS = True
 vertices = []
 visitados = []
 fila = []
 cor_anterior = (random.randrange(256),random.randrange(256),random.randrange(256))
 
 pygame.init()
-display = pygame.display.set_mode((WIDTH, HEIGHT))
+display = pygame.display.set_mode((WIDTH, WIDTH))
 display.fill(BLACK)
 clock = pygame.time.Clock()
 pygame.display.set_caption("PixelArt")
 
 class Vortex:
-  def __init__(self, x, y, width, height, display) -> None:
-    self.x = x
-    self.y = y
+  def __init__(self, row, col, width, display) -> None:
+    self.row = row * width
+    self.col = col * width
+    self.x = row
+    self.y = col
     self.color = COR_INICIAL
     self.width = width
-    self.height = height
     self.display = display
     self.neighbours = []
     self.is_vortex = True
@@ -41,7 +42,8 @@ class Vortex:
       color = self.color
     else:
       self.color = color
-    pygame.draw.rect(display, color, (self.x, self.y, self.width, self.height))
+    pygame.draw.rect(display, color, (self.row, self.col, self.width, self.width))
+    pygame.display.update()
 
   def is_wall(self):
     w = self.display.get_width()
@@ -55,11 +57,7 @@ class Vortex:
       self.neighbours = []
 
   def discover_neighbours(self, field):
-    w = self.display.get_width()
-    h = self.display.get_height()
-
-    if (self.x > 0 and self.x < w - 1) and (self.y > 0 and self.y < h - 1):
-      # print('entrou')
+    if (self.x > 0 and self.x < ROWS - 1) and (self.y > 0 and self.y < ROWS - 1):
       if field[self.x + 1][self.y].is_vortex:
         self.neighbours.append(field[self.x + 1][self.y]) # vizinho da direita
       if field[self.x - 1][self.y].is_vortex:
@@ -86,39 +84,26 @@ def escolhe_cor(cor):
 
   return tuple(nova_cor)
 
-for i in range(WIDTH):
+for i in range(ROWS):
   cols = []
-  for j in range(HEIGHT):
-    cols.append(Vortex(i, j, BLOCK_SIZE, BLOCK_SIZE, display))
-    # cols[j].is_wall()
+  for j in range(ROWS):
+    cols.append(Vortex(i, j, WIDTH // ROWS, display))
   vertices.append(cols)
 
-for i in range(WIDTH):
-  for j in range(HEIGHT):
+for i in range(ROWS):
+  for j in range(ROWS):
     vertices[i][j].discover_neighbours(vertices)
 
-def draw_field(w, h):
-  global cor_anterior
-  for i in range(0, w, BLOCK_SIZE):
-    for j in range(0, h, BLOCK_SIZE):
-      cor = escolhe_cor(cor_anterior)
-      cor_anterior = cor
-      vertices[i][j].vortex(display, color=cor)
-      clock.tick(FPS)
-      pygame.display.update() # manter comentado se quiser atualizar a tela toda de uma vez (se tirar o comentario, sera atualizado pixel por pixel)
 
-def bfs(queue, node):  # recebe a lista de vertices
+def bfs(queue, node):
   global cor_anterior
   node.visited = True
   node.vortex(display, color=COR_INICIAL)
   queue.append(node)
   
   while queue:
-    # s = queue.pop(0)
     s = random.choice(queue) if RANDOM_BFS else queue.pop(0)
     queue.pop(queue.index(s)) if RANDOM_BFS else None
-
-    # print(s.neighbours)
 
     for n in s.neighbours:
       if not n.visited:
@@ -127,24 +112,17 @@ def bfs(queue, node):  # recebe a lista de vertices
         cor = escolhe_cor(cor_anterior)
         cor_anterior = cor
         n.vortex(display, color=cor)
-        pygame.display.update()
-
-
-
-
+        
 
 while True:
-  # draw_field(WIDTH, HEIGHT)
-  bfs(fila, vertices[int(WIDTH / 2)][int(HEIGHT / 2)])
+  bfs(fila, vertices[int(ROWS // 2)][int(ROWS // 2)])
   clock.tick(FPS)
 
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
-      screenshot = pygame.Surface((WIDTH, HEIGHT))
+      screenshot = pygame.Surface((WIDTH, WIDTH))
       screenshot.blit(display, (0, 0))
       pygame.image.save(screenshot, "print.png")
       pygame.quit()
       sys.exit()
-
-  # pygame.display.update()
 
