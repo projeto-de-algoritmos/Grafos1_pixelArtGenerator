@@ -44,11 +44,15 @@ Para utilizá-lo é necessário:
 
 1. Clonar o repositório
 
-     $ git clone https://github.com/hericklima22/Grafos1_pixelArtGenerator
+    $ git clone https://github.com/hericklima22/Grafos1_pixelArtGenerator
 
 2. Instalar o Python
 
     $ sudo apt-get install python3
+
+3. Instalar a biblioteca pygame
+   
+    pip install pygame
 
 3. Executar em sua máquina
    
