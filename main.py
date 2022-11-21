@@ -4,19 +4,18 @@ import random
 import pygame
 
 """CONFIGURAÇÔES"""
-WIDTH = 720                     # tamanho da tela
+WIDTH = 720                     # tamanho da tela(quanto maior, mais lento)
 HEIGHT = 480
-ALG_RUN = False                 # True = DFS      False = FFS
+ALG_RUN = False                # True = DFS      False = FFS
 USE_RANDOM_COLOR = False
 menu_x, menu_y = 720, 480
-BLOCK_SIZE = 5                  # tamanho do block
+BLOCK_SIZE = 20                 # tamanho do block
 ROWS = WIDTH // BLOCK_SIZE      # quantidade de linhas
 COLUMNS = HEIGHT // BLOCK_SIZE
-RANDOM_BFS = False              # muda o efeito de preenchimento da BFS
-RANDOM_DFS = False              # muda o efeito de preenchimento da DFS
-TAXA_COR = 50                   # muda a frequencia com que cada cor é alterada, quanto maior, mais cores aparecerão (melhor efeito entre 16 e 100)
+RANDOM_BFS = True              # muda o efeito de preenchimento da BFS
+RANDOM_DFS = True              # muda o efeito de preenchimento da DFS
+TAXA_COR = 2                  # muda a frequencia com que cada cor é alterada, quanto maior, mais cores aparecerão (melhor efeito entre 16 e 100)
 vertices = []
-
 
 '''CORES'''
 RANDOM_COLOR = (random.randrange(256),random.randrange(256),random.randrange(256))
@@ -99,7 +98,9 @@ def draw_options_menu():
   pygame.display.update()
   global BLOCK_SIZE, ALG_RUN, TAXA_COR, RANDOM_BFS, RANDOM_DFS, USE_RANDOM_COLOR, ROWS, COLUMNS
   b, d, s, n = "BFS", "DFS", "Sim", "Não"
+  FPS = 200
   while True:
+    clock.tick(FPS)
     display.fill(CIAN)
     font40 = pygame.font.Font('assets/title-font.ttf', 50)
     font20 = pygame.font.Font('assets/title-font.ttf', 20)
@@ -178,6 +179,7 @@ def draw_start_menu():
   pygame.display.update()
   display = pygame.display.set_mode((WIDTH, HEIGHT))
   fim_aug = True
+  make_grid()
   while True:
     display.fill(CIAN)
     font40 = pygame.font.Font('assets/title-font.ttf', 30)
@@ -299,17 +301,17 @@ def escolhe_cor(cor):
   nova_cor = list(cor)
   limite = 256
 
-  if cor[0] > cor[1] and cor[0] > cor[2] and random.choice([True, False]): # elemento 0 é o maior da lista
+  if cor[0] > cor[1] and cor[0] > cor[2] and random.choice([True, False, False, False]): # elemento 0 é o maior da lista
     nova_cor[0] = (cor[0] + TAXA_COR) % limite
-    nova_cor[1] = (cor[1] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
-    nova_cor[2] = (cor[2] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
-  if cor[1] > cor[0] and cor[1] > cor[2] and random.choice([True, False]): # elemento 1 é o maior da lista 
-    nova_cor[1] = (cor[0] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+    #nova_cor[1] = (cor[1] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+   # nova_cor[2] = (cor[2] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+  if cor[1] > cor[0] and cor[1] > cor[2] and random.choice([True, False, False]): # elemento 1 é o maior da lista 
+   # nova_cor[1] = (cor[0] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
     nova_cor[1] = (cor[1] + TAXA_COR) % limite
-    nova_cor[2] = (cor[2] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+    #nova_cor[2] = (cor[2] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
   if cor[2] > cor[1] and cor[2] > cor[0] and random.choice([True, False]): # elemento 2 é o maior da lista 
-    nova_cor[2] = (cor[0] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
-    nova_cor[1] = (cor[1] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+    #nova_cor[2] = (cor[0] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
+    #nova_cor[1] = (cor[1] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
     nova_cor[2] = (cor[2] + TAXA_COR) % limite
   else:
     i = random.randrange(0, 3)
@@ -321,19 +323,19 @@ def make_grid():
 
   for i in range(ROWS):
     cols = []
-    for j in range(ROWS):
+    for j in range(COLUMNS):
       cols.append(Vortex(i, j, WIDTH // ROWS, display))
     vertices.append(cols)
 
   for i in range(ROWS):
-    for j in range(ROWS):
+    for j in range(COLUMNS):
       vertices[i][j].discover_neighbours(vertices)
 
 def bfs(node):
   queue = []
   global RANDOM_COLOR
   node.visited = True
-  node.vortex(display, color=RED if not USE_RANDOM_COLOR else RANDOM_COLOR)
+  node.vortex(display, color=RANDOM_COLOR)
   queue.append(node)
   
   while queue:
@@ -365,11 +367,11 @@ def dfs(node):
 
 def reset():
   for i in range(ROWS):
-    for j in range(ROWS):
+    for j in range(COLUMNS):
       vertices[i][j].visited = False
 
 
 
 if __name__ == '__main__':
-  make_grid()
+  
   draw_main_menu()
