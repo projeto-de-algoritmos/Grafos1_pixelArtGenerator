@@ -320,7 +320,9 @@ def escolhe_cor(cor):
   return tuple(nova_cor)
 
 def make_grid():
+  global vertices
 
+  vertices = []
   for i in range(ROWS):
     cols = []
     for j in range(COLUMNS):
