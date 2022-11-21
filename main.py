@@ -6,15 +6,15 @@ import pygame
 """CONFIGURAÇÔES"""
 WIDTH = 720                     # tamanho da tela(quanto maior, mais lento)
 HEIGHT = 480
-ALG_RUN = False                # True = DFS      False = FFS
+ALG_RUN = False                 # True = DFS      False = FFS
 USE_RANDOM_COLOR = False
 menu_x, menu_y = 720, 480
 BLOCK_SIZE = 20                 # tamanho do block
 ROWS = WIDTH // BLOCK_SIZE      # quantidade de linhas
 COLUMNS = HEIGHT // BLOCK_SIZE
-RANDOM_BFS = True              # muda o efeito de preenchimento da BFS
-RANDOM_DFS = True              # muda o efeito de preenchimento da DFS
-TAXA_COR = 2                  # muda a frequencia com que cada cor é alterada, quanto maior, mais cores aparecerão (melhor efeito entre 16 e 100)
+RANDOM_BFS = True               # muda o efeito de preenchimento da BFS
+RANDOM_DFS = True               # muda o efeito de preenchimento da DFS
+TAXA_COR = 2                    # muda a frequencia com que cada cor é alterada, quanto maior, mais cores aparecerão (melhor efeito entre 16 e 100)
 vertices = []
 
 '''CORES'''
@@ -188,8 +188,6 @@ def draw_start_menu():
     font22 = pygame.font.Font('assets/title-font.ttf', 20)
     draw_text("Clique onde deseja iniciar.", font40, WHITE, display, 260, 50)
     draw_text("As vezes é necessário clicar mais de uma vez para começar.", font22, RED, display, 365, 80)
-    #draw_text("Aperte P para tirar print", font40, WHITE, display, 266, 140)
-    #draw_text("A print é sobrescrita no arquivo print.png na raiz.", font22, GREEN, display, 322, 175)
     draw_text("No fim aperte ESPAÇO para sair", font22, WHITE, display, 323, 440)
 
     for event in pygame.event.get():
@@ -305,15 +303,9 @@ def escolhe_cor(cor):
 
   if cor[0] > cor[1] and cor[0] > cor[2] and random.choice([True, False, False, False]): # elemento 0 é o maior da lista
     nova_cor[0] = (cor[0] + TAXA_COR) % limite
-    #nova_cor[1] = (cor[1] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
-   # nova_cor[2] = (cor[2] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
   if cor[1] > cor[0] and cor[1] > cor[2] and random.choice([True, False, False]): # elemento 1 é o maior da lista 
-   # nova_cor[1] = (cor[0] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
     nova_cor[1] = (cor[1] + TAXA_COR) % limite
-    #nova_cor[2] = (cor[2] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
   if cor[2] > cor[1] and cor[2] > cor[0] and random.choice([True, False]): # elemento 2 é o maior da lista 
-    #nova_cor[2] = (cor[0] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
-    #nova_cor[1] = (cor[1] + random.randrange(0, 10) if TAXA_COR > 15 else 0) % limite
     nova_cor[2] = (cor[2] + TAXA_COR) % limite
   else:
     i = random.randrange(0, 3)
