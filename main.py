@@ -31,6 +31,8 @@ pygame.init()
 display = pygame.display.set_mode((menu_x, menu_y))
 clock = pygame.time.Clock()
 pygame.display.set_caption("PixelArt")
+pygame.mixer.music.load('assets/bgsong.mp3')
+pygame.mixer.music.play(-1)
 
 
 '''MENUS'''
@@ -186,8 +188,8 @@ def draw_start_menu():
     font22 = pygame.font.Font('assets/title-font.ttf', 20)
     draw_text("Clique onde deseja iniciar.", font40, WHITE, display, 260, 50)
     draw_text("As vezes é necessário clicar mais de uma vez para começar.", font22, RED, display, 365, 80)
-    draw_text("Aperte P para tirar print", font40, WHITE, display, 266, 140)
-    draw_text("A print é sobrescrita no arquivo print.png na raiz.", font22, GREEN, display, 322, 175)
+    #draw_text("Aperte P para tirar print", font40, WHITE, display, 266, 140)
+    #draw_text("A print é sobrescrita no arquivo print.png na raiz.", font22, GREEN, display, 322, 175)
     draw_text("No fim aperte ESPAÇO para sair", font22, WHITE, display, 323, 440)
 
     for event in pygame.event.get():
