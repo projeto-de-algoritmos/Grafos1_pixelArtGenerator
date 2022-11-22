@@ -9,7 +9,7 @@ HEIGHT = 480
 ALG_RUN = False                 # True = DFS      False = FFS
 USE_RANDOM_COLOR = False
 menu_x, menu_y = 720, 480
-BLOCK_SIZE = 20                 # tamanho do block
+BLOCK_SIZE = 2                  # tamanho do block
 ROWS = WIDTH // BLOCK_SIZE      # quantidade de linhas
 COLUMNS = HEIGHT // BLOCK_SIZE
 RANDOM_BFS = True               # muda o efeito de preenchimento da BFS
@@ -32,7 +32,7 @@ display = pygame.display.set_mode((menu_x, menu_y))
 clock = pygame.time.Clock()
 pygame.display.set_caption("PixelArt")
 pygame.mixer.music.load('assets/bgsong.mp3')
-pygame.mixer.music.play(-1)
+# pygame.mixer.music.play(-1)
 
 
 '''MENUS'''
@@ -61,9 +61,9 @@ def draw_resolution_menu():
     draw_text(f"{WIDTH}", font24, WHITE, display, 420, 245)
     draw_text("(, = -   . = +)", font_obs, RED, display, 280, 275)
 
-    draw_text("C/V Altura: ", font24, GREEN, display, 280, 325)
+    draw_text("X/C Altura: ", font24, GREEN, display, 280, 325)
     draw_text(f"{HEIGHT}", font24, WHITE, display, 420, 325)
-    draw_text("(C = -   V = +)", font_obs, RED, display, 260, 355)
+    draw_text("(X = -   C = +)", font_obs, RED, display, 260, 355)
 
     draw_text("V - Voltar", font20, WHITE, display, 100, 440)
 
@@ -86,10 +86,10 @@ def draw_resolution_menu():
         if event.key == pygame.K_COMMA:
           WIDTH -= passo if WIDTH > 24 + passo else 0
           pygame.display.update()
-        if event.key == pygame.K_v:
+        if event.key == pygame.K_c:
           HEIGHT += passo if HEIGHT <= 5000 - passo else 0
           pygame.display.update()
-        if event.key == pygame.K_c:
+        if event.key == pygame.K_x:
           HEIGHT -= passo if HEIGHT > 24 + passo else 0
           pygame.display.update()
 
@@ -100,9 +100,9 @@ def draw_options_menu():
   pygame.display.update()
   global BLOCK_SIZE, ALG_RUN, TAXA_COR, RANDOM_BFS, RANDOM_DFS, USE_RANDOM_COLOR, ROWS, COLUMNS
   b, d, s, n = "BFS", "DFS", "Sim", "Não"
-  FPS = 200
+  
   while True:
-    clock.tick(FPS)
+    
     display.fill(CIAN)
     font40 = pygame.font.Font('assets/title-font.ttf', 50)
     font20 = pygame.font.Font('assets/title-font.ttf', 20)
@@ -120,7 +120,7 @@ def draw_options_menu():
     draw_text("S/N Usar busca aleatória:", font24, GREEN, display, 330, 305)
     draw_text(f"{s if (RANDOM_DFS and ALG_RUN) or (RANDOM_BFS and not ALG_RUN) else n}", font24, WHITE, display, 560, 305)
     draw_text("(Melhores efeitos)", font_obs, RED, display, 330, 335)
-    draw_text("G/H Usar coreas aleatórias", font24, GREEN, display, 320, 375)
+    draw_text("G/H Usar cores aleatórias", font24, GREEN, display, 320, 375)
     draw_text(f"{s if USE_RANDOM_COLOR else n}", font24, WHITE, display, 560, 375)
     draw_text("(G = Não   H = Sim)", font_obs, RED, display, 330, 405)
     draw_text("V - Voltar", font20, WHITE, display, 100, 440)
@@ -182,7 +182,9 @@ def draw_start_menu():
   display = pygame.display.set_mode((WIDTH, HEIGHT))
   fim_aug = True
   make_grid()
+  FPS = 20
   while True:
+    clock.tick(FPS)
     display.fill(CIAN)
     font40 = pygame.font.Font('assets/title-font.ttf', 30)
     font22 = pygame.font.Font('assets/title-font.ttf', 20)
