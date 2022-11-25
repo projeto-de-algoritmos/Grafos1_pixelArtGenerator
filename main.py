@@ -221,6 +221,7 @@ def draw_start_menu():
 
 def draw_main_menu():
   pygame.display.update()
+  display = pygame.display.set_mode((menu_x, menu_y))
   while True:
     display.fill(CIAN)
     font70 = pygame.font.Font('assets/title-font.ttf', 70)
