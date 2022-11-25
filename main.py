@@ -1,7 +1,6 @@
 import pygame
 import sys
 import random
-import pygame
 
 """CONFIGURAÇÔES"""
 WIDTH = 720                     # tamanho da tela(quanto maior, mais lento)
